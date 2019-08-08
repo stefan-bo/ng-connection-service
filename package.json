@@ -21,6 +21,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular-devkit/build-ng-packagr": "^0.802.1",
     "@angular/animations": "^8.2.1",
     "@angular/common": "^8.2.1",
     "@angular/compiler": "^8.2.1",
@@ -37,7 +38,6 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.802.1",
-    "@angular-devkit/build-ng-packagr": "^0.802.1",
     "@angular/cli": "^8.1.2",
     "@angular/compiler-cli": "^8.2.1",
     "@angular/language-service": "^8.2.1",
