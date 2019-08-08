@@ -16,6 +16,9 @@
     "snyk-protect": "snyk protect",
     "prepare": "npm run snyk-protect"
   },
+  "config": {
+    "unsafe-perm": true
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "^8.2.1",
