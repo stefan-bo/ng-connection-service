@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { InjectionToken, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 /**
  * Instance of this interface is used to report current connection status.
  */

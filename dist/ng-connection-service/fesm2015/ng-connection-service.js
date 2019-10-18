@@ -1,7 +1,8 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { InjectionToken, EventEmitter, Injectable, Inject, Optional, ɵɵdefineInjectable, ɵɵinject, NgModule } from '@angular/core';
 import { timer, fromEvent } from 'rxjs';
 import { switchMap, retryWhen, tap, delay, debounceTime, startWith } from 'rxjs/operators';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { defaults, clone, isNil } from 'lodash';
 
 /**
  * @fileoverview added by tsickle
@@ -24,7 +25,7 @@ class ConnectionService {
             hasInternetAccess: false,
             hasNetworkConnection: window.navigator.onLine
         };
-        this.serviceOptions = Object.assign({}, ConnectionService.DEFAULT_OPTIONS, options);
+        this.serviceOptions = defaults({}, options, ConnectionService.DEFAULT_OPTIONS);
         this.checkNetworkState();
         this.checkInternetState();
     }
@@ -34,14 +35,14 @@ class ConnectionService {
      * @return {?}
      */
     get options() {
-        return Object.assign({}, this.serviceOptions);
+        return clone(this.serviceOptions);
     }
     /**
      * @private
      * @return {?}
      */
     checkInternetState() {
-        if (this.httpSubscription !== undefined) {
+        if (!isNil(this.httpSubscription)) {
             this.httpSubscription.unsubscribe();
         }
         if (this.serviceOptions.enableHeartbeat) {
@@ -49,9 +50,7 @@ class ConnectionService {
                 .pipe(switchMap((/**
              * @return {?}
              */
-            () => this.http[this.serviceOptions.requestMethod](this.serviceOptions.heartbeatUrl, {
-                responseType: 'text'
-            }))), retryWhen((/**
+            () => this.http[this.serviceOptions.requestMethod](this.serviceOptions.heartbeatUrl, { responseType: 'text' }))), retryWhen((/**
              * @param {?} errors
              * @return {?}
              */
@@ -120,7 +119,8 @@ class ConnectionService {
             this.onlineSubscription.unsubscribe();
             this.httpSubscription.unsubscribe();
         }
-        catch (e) { }
+        catch (e) {
+        }
     }
     /**
      * Monitor Network & Internet connection status by subscribing to this observer. If you set "reportCurrentState" to "false" then
@@ -129,9 +129,10 @@ class ConnectionService {
      * @return {?}
      */
     monitor(reportCurrentState = true) {
-        return reportCurrentState
-            ? this.stateChangeEventEmitter.pipe(debounceTime(300), startWith(this.currentState))
-            : this.stateChangeEventEmitter.pipe(debounceTime(300));
+        return reportCurrentState ?
+            this.stateChangeEventEmitter.pipe(debounceTime(300), startWith(this.currentState))
+            :
+                this.stateChangeEventEmitter.pipe(debounceTime(300));
     }
     /**
      * Update options of the service. You could specify partial options object. Values that are not specified will use default / previous
@@ -140,7 +141,7 @@ class ConnectionService {
      * @return {?}
      */
     updateOptions(options) {
-        this.serviceOptions = Object.assign({}, this.serviceOptions, options);
+        this.serviceOptions = defaults({}, options, this.serviceOptions);
         this.checkInternetState();
     }
 }

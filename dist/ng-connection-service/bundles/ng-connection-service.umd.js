@@ -1,34 +1,8 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/common/http'), require('@angular/core'), require('rxjs'), require('rxjs/operators')) :
-    typeof define === 'function' && define.amd ? define('ng-connection-service', ['exports', '@angular/common/http', '@angular/core', 'rxjs', 'rxjs/operators'], factory) :
-    (global = global || self, factory(global['ng-connection-service'] = {}, global.ng.common.http, global.ng.core, global.rxjs, global.rxjs.operators));
-}(this, function (exports, http, core, rxjs, operators) { 'use strict';
-
-    /*! *****************************************************************************
-    Copyright (c) Microsoft Corporation. All rights reserved.
-    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-    this file except in compliance with the License. You may obtain a copy of the
-    License at http://www.apache.org/licenses/LICENSE-2.0
-
-    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-    MERCHANTABLITY OR NON-INFRINGEMENT.
-
-    See the Apache Version 2.0 License for specific language governing permissions
-    and limitations under the License.
-    ***************************************************************************** */
-
-    var __assign = function() {
-        __assign = Object.assign || function __assign(t) {
-            for (var s, i = 1, n = arguments.length; i < n; i++) {
-                s = arguments[i];
-                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-            }
-            return t;
-        };
-        return __assign.apply(this, arguments);
-    };
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('rxjs'), require('rxjs/operators'), require('@angular/common/http'), require('lodash')) :
+    typeof define === 'function' && define.amd ? define('ng-connection-service', ['exports', '@angular/core', 'rxjs', 'rxjs/operators', '@angular/common/http', 'lodash'], factory) :
+    (global = global || self, factory(global['ng-connection-service'] = {}, global.ng.core, global.rxjs, global.rxjs.operators, global.ng.common.http, global.lodash));
+}(this, function (exports, core, rxjs, operators, http, lodash) { 'use strict';
 
     /**
      * @fileoverview added by tsickle
@@ -47,7 +21,7 @@
                 hasInternetAccess: false,
                 hasNetworkConnection: window.navigator.onLine
             };
-            this.serviceOptions = __assign({}, ConnectionService.DEFAULT_OPTIONS, options);
+            this.serviceOptions = lodash.defaults({}, options, ConnectionService.DEFAULT_OPTIONS);
             this.checkNetworkState();
             this.checkInternetState();
         }
@@ -62,7 +36,7 @@
              * @return {?}
              */
             function () {
-                return __assign({}, this.serviceOptions);
+                return lodash.clone(this.serviceOptions);
             },
             enumerable: true,
             configurable: true
@@ -77,7 +51,7 @@
          */
         function () {
             var _this = this;
-            if (this.httpSubscription !== undefined) {
+            if (!lodash.isNil(this.httpSubscription)) {
                 this.httpSubscription.unsubscribe();
             }
             if (this.serviceOptions.enableHeartbeat) {
@@ -85,11 +59,7 @@
                     .pipe(operators.switchMap((/**
                  * @return {?}
                  */
-                function () {
-                    return _this.http[_this.serviceOptions.requestMethod](_this.serviceOptions.heartbeatUrl, {
-                        responseType: 'text'
-                    });
-                })), operators.retryWhen((/**
+                function () { return _this.http[_this.serviceOptions.requestMethod](_this.serviceOptions.heartbeatUrl, { responseType: 'text' }); })), operators.retryWhen((/**
                  * @param {?} errors
                  * @return {?}
                  */
@@ -172,7 +142,8 @@
                 this.onlineSubscription.unsubscribe();
                 this.httpSubscription.unsubscribe();
             }
-            catch (e) { }
+            catch (e) {
+            }
         };
         /**
          * Monitor Network & Internet connection status by subscribing to this observer. If you set "reportCurrentState" to "false" then
@@ -193,9 +164,10 @@
          */
         function (reportCurrentState) {
             if (reportCurrentState === void 0) { reportCurrentState = true; }
-            return reportCurrentState
-                ? this.stateChangeEventEmitter.pipe(operators.debounceTime(300), operators.startWith(this.currentState))
-                : this.stateChangeEventEmitter.pipe(operators.debounceTime(300));
+            return reportCurrentState ?
+                this.stateChangeEventEmitter.pipe(operators.debounceTime(300), operators.startWith(this.currentState))
+                :
+                    this.stateChangeEventEmitter.pipe(operators.debounceTime(300));
         };
         /**
          * Update options of the service. You could specify partial options object. Values that are not specified will use default / previous
@@ -215,7 +187,7 @@
          * @return {?}
          */
         function (options) {
-            this.serviceOptions = __assign({}, this.serviceOptions, options);
+            this.serviceOptions = lodash.defaults({}, options, this.serviceOptions);
             this.checkInternetState();
         };
         ConnectionService.DEFAULT_OPTIONS = {
